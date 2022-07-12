@@ -148,3 +148,36 @@ www-data 12566  0.0  0.0 125332  3040 pts/25   S+   10:21   0:00 nginx: worker p
 
 $ docker inspect --format '{{ .NetworkSettings.IPAddress }}' $(docker ps -q)
 172.17.0.2
+
+
+Memory Constraints
+You can also set memory constraints on Docker:
+
+docker run -it -m 300M ubuntu:14.04 /bin/bash
+
+Capabilities
+Linux capabilities can be set by using cap-add and cap-drop. See https://docs.docker.com/engine/reference/run/#/runtime-privilege-and-linux-capabilities for details. This should be used for greater security.
+
+To mount a FUSE based filesystem, you need to combine both --cap-add and --device:
+
+docker run --rm -it --cap-add SYS_ADMIN --device /dev/fuse sshfs
+Give access to a single device:
+
+docker run -it --device=/dev/ttyUSB0 debian bash
+Give access to all devices:
+
+docker run -it --privileged -v /dev/bus/usb:/dev/bus/usb debian bash
+
+Info
+docker ps shows running containers.
+docker logs gets logs from container. (You can use a custom log driver, but logs is only available for json-file and journald in 1.10).
+docker inspect looks at all the info on a container (including IP address).
+docker events gets events from container.
+docker port shows public facing port of container.
+docker top shows running processes in container.
+docker stats shows containers' resource usage statistics.
+docker diff shows changed files in the container's FS.
+docker ps -a shows running and stopped containers.
+
+docker stats --all shows a list of all containers, default shows just running.
+
