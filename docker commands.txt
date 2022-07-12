@@ -170,7 +170,9 @@ docker run -it --privileged -v /dev/bus/usb:/dev/bus/usb debian bash
 
 Info
 docker ps shows running containers.
-docker logs gets logs from container. (You can use a custom log driver, but logs is only available for json-file and journald in 1.10).
+docker logs gets logs from container. (You can use a custom log driver, but logs is 
+only available for json-file and journald in 1.10).
+
 docker inspect looks at all the info on a container (including IP address).
 docker events gets events from container.
 docker port shows public facing port of container.
@@ -180,4 +182,52 @@ docker diff shows changed files in the container's FS.
 docker ps -a shows running and stopped containers.
 
 docker stats --all shows a list of all containers, default shows just running.
+
+docker cp copies files or folders between a container and the local filesystem.
+docker export turns container filesystem into tarball archive stream to STDOUT.
+
+docker exec to execute a command in container.
+To enter a running container, attach a new shell process to a running container called foo, 
+use: docker exec -it foo /bin/bash.
+
+
+Images are just templates for docker containers.
+
+Lifecycle
+docker images shows all images.
+docker import creates an image from a tarball.
+docker build creates image from Dockerfile.
+docker commit creates image from a container, pausing it temporarily if it is running.
+docker rmi removes an image.
+
+Networks
+Docker has a networks feature. Docker automatically creates 3 network interfaces
+ when you install it (bridge, host none).
+
+ A new container is launched into the bridge network by default. 
+To enable communication between multiple containers, you can create a
+ new network and launch containers in it. This enables containers to 
+communicate to each other while being isolated from containers that are
+ not connected to the network. Furthermore, it allows to map container names to their IP addresses
+
+Lifecycle
+docker network create NAME Create a new network (default type: bridge).
+docker network rm NAME Remove one or more networks by name or identifier. No containers can be connected to the network when deleting it.
+Info
+docker network ls List networks
+docker network inspect NAME Display detailed information on one or more networks.
+Connection
+docker network connect NETWORK CONTAINER Connect a container to a network
+docker network disconnect NETWORK CONTAINER Disconnect a container from a network
+You can specify a specific IP address for a container:
+
+# create a new bridge network with your subnet and gateway for your ip block
+docker network create --subnet 203.0.113.0/24 --gateway 203.0.113.254 iptastic
+
+# run a nginx container with a specific ip in that block
+$ docker run --rm -it --net iptastic --ip 203.0.113.2 nginx
+
+# curl the ip from any other place (assuming this is a public ip block duh)
+$ curl 203.0.113.2
+
 
